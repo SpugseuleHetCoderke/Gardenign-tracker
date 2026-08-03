@@ -2,15 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { getTasksDueNow } from "@/lib/care";
 import { sendPushToAll } from "@/lib/push";
 import { sendReminderEmail } from "@/lib/email";
+import { getSettings } from "@/lib/settings";
 
 /**
  * Triggered daily by Vercel Cron (see vercel.json) or by a manual request.
  * Vercel signs its own cron requests with this same secret automatically, so
  * this also blocks anyone else from spamming your reminders.
  *
- * Push is the primary channel (set up on her phone); email only fires when
- * RESEND_API_KEY/REMINDER_TO/REMINDER_FROM are configured, so it's an
- * optional backup rather than a second thing to maintain.
+ * Push is the primary channel (set up on her phone); email is an opt-in
+ * extra, switched on and addressed from /instellingen — this route never
+ * reads an email address from the environment.
  */
 export async function GET(request: NextRequest) {
   const secret = process.env.CRON_SECRET;
@@ -31,8 +32,9 @@ export async function GET(request: NextRequest) {
   });
 
   let email: { sent: boolean } | null = null;
-  if (process.env.RESEND_API_KEY && process.env.REMINDER_TO) {
-    email = await sendReminderEmail(tasks)
+  const settings = await getSettings();
+  if (settings.emailRemindersOn && settings.emailAddress && process.env.RESEND_API_KEY) {
+    email = await sendReminderEmail(tasks, settings.emailAddress)
       .then(() => ({ sent: true }))
       .catch((err) => {
         console.error("Mail versturen mislukt:", err);

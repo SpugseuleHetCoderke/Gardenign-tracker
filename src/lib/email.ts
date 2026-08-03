@@ -99,15 +99,18 @@ export function renderReminderEmail(tasks: DueTask[]): {
   return { subject, html, text };
 }
 
-/** Sends the reminder email. Throws if RESEND_API_KEY / REMINDER_TO / REMINDER_FROM are missing. */
-export async function sendReminderEmail(tasks: DueTask[]) {
+/**
+ * Sends the reminder email to `to` (the address set on /instellingen).
+ * Throws if RESEND_API_KEY / REMINDER_FROM aren't configured — those are
+ * deployment-level config, not something edited from the app.
+ */
+export async function sendReminderEmail(tasks: DueTask[], to: string) {
   const apiKey = process.env.RESEND_API_KEY;
-  const to = process.env.REMINDER_TO;
   const from = process.env.REMINDER_FROM;
 
-  if (!apiKey || !to || !from) {
+  if (!apiKey || !from) {
     throw new Error(
-      "RESEND_API_KEY, REMINDER_TO and REMINDER_FROM must all be set to send reminders.",
+      "RESEND_API_KEY and REMINDER_FROM must both be set to send reminders.",
     );
   }
 

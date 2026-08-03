@@ -142,3 +142,16 @@ model PushSubscription {
   label     String?
   createdAt DateTime @default(now())
 }
+
+/// App-wide settings, editable from /instellingen. There's no login system,
+/// so this is a single fixed-id row rather than per-user rows — one
+/// household, one set of preferences.
+model Settings {
+  id String @id @default("singleton")
+
+  /// Off by default: reminders are push-first, email is an opt-in extra.
+  emailRemindersOn Boolean @default(false)
+  emailAddress     String?
+
+  updatedAt DateTime @updatedAt
+}

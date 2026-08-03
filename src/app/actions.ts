@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { updateEmailSettings } from "@/lib/settings";
 import {
   ActivityType,
   Lifecycle,
@@ -79,6 +80,47 @@ export async function subscribeToPush(sub: PushSubscriptionInput) {
 export async function unsubscribeFromPush(endpoint: string) {
   if (!endpoint) return;
   await prisma.pushSubscription.deleteMany({ where: { endpoint } });
+}
+
+// ---------------------------------------------------------------- settings
+
+/** Very loose check — good enough to catch typos, not meant to be a full RFC validator. */
+function looksLikeEmail(value: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+export type SaveEmailSettingsState = { error?: string; savedAt?: number };
+
+/**
+ * Returns an error instead of throwing, so the settings form (via
+ * useActionState) can show it inline rather than crash to Next.js's generic
+ * error page over a plain typo in an email address.
+ */
+export async function saveEmailSettings(
+  _prevState: SaveEmailSettingsState,
+  formData: FormData,
+): Promise<SaveEmailSettingsState> {
+  const emailRemindersOn = formData.get("emailRemindersOn") === "on";
+  const emailAddress = String(formData.get("emailAddress") ?? "").trim();
+
+  if (emailRemindersOn) {
+    if (!emailAddress) {
+      return { error: "Vul een e-mailadres in om herinneringen per mail te ontvangen." };
+    }
+    if (!looksLikeEmail(emailAddress)) {
+      return { error: "Dat ziet er niet uit als een geldig e-mailadres." };
+    }
+  }
+
+  await updateEmailSettings({
+    emailRemindersOn,
+    // Keep the last-used address even while switched off, so turning it
+    // back on later doesn't mean retyping it.
+    emailAddress: emailAddress || null,
+  });
+
+  revalidatePath("/instellingen");
+  return { savedAt: Date.now() };
 }
 
 // ---------------------------------------------------------------- activities

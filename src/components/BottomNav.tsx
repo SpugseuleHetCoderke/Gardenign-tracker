@@ -8,6 +8,7 @@ const ITEMS = [
   { href: "/loggen", label: "Noteren", icon: "✅" },
   { href: "/planten", label: "Planten", icon: "🪴" },
   { href: "/soorten", label: "Naslag", icon: "📖" },
+  { href: "/instellingen", label: "Instellingen", icon: "⚙️" },
 ];
 
 export default function BottomNav() {
