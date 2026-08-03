@@ -19,10 +19,18 @@ const OUT_DIR = resolve(import.meta.dirname, "../public");
  * as proportions.
  */
 function svgIcon(size: number, { maskable }: { maskable?: boolean } = {}) {
-  // Maskable icons need their content inside a smaller "safe zone", since
-  // Android may crop the outer edges into a circle/squircle.
-  const pad = maskable ? size * 0.2 : size * 0.11;
+  // Maskable icons must keep their subject inside the "safe zone" — the
+  // centred circle of 80% diameter that Android is guaranteed not to crop.
+  // 10% per side lands exactly on that, so the artwork fills the circle
+  // instead of floating small inside it. Non-maskable icons get only a hair
+  // of padding, since nothing crops them.
+  const pad = maskable ? size * 0.1 : size * 0.045;
   const inner = size - pad * 2;
+
+  // The composition has headroom above the figure; lifting it trims that dead
+  // space so the subject sits larger in the frame. Content that overflows is
+  // clipped back to the icon's rounded outline by #frame below.
+  const lift = inner * 0.075;
 
   /** Scale a 0..1 proportion into the drawing area. */
   const s = (v: number) => (v * inner).toFixed(2);
@@ -63,14 +71,19 @@ function svgIcon(size: number, { maskable }: { maskable?: boolean } = {}) {
       <stop offset="0" stop-color="#93b6ca"/>
       <stop offset="1" stop-color="#4f7791"/>
     </linearGradient>
+    <clipPath id="frame">
+      <rect width="${size}" height="${size}" rx="${maskable ? 0 : size * 0.22}"/>
+    </clipPath>
   </defs>
 
-  <rect width="${size}" height="${size}" rx="${maskable ? 0 : size * 0.22}" fill="url(#bg)"/>
+  <g clip-path="url(#frame)">
+  <rect width="${size}" height="${size}" fill="url(#bg)"/>
 
-  <g transform="translate(${pad}, ${pad})">
-    <!-- Ground -->
-    <path d="M 0 ${s(0.83)} C ${s(0.3)} ${s(0.805)}, ${s(0.7)} ${s(0.805)}, ${s(1)} ${s(0.83)}
-             L ${s(1)} ${s(1)} L 0 ${s(1)} Z" fill="url(#soil)"/>
+  <g transform="translate(${pad}, ${pad - lift})">
+    <!-- Ground. Extends well past the bottom edge so lifting the scene can't
+         expose a gap underneath; the overflow is clipped by #frame. -->
+    <path d="M ${s(-0.1)} ${s(0.83)} C ${s(0.3)} ${s(0.805)}, ${s(0.7)} ${s(0.805)}, ${s(1.1)} ${s(0.83)}
+             L ${s(1.1)} ${s(1.35)} L ${s(-0.1)} ${s(1.35)} Z" fill="url(#soil)"/>
 
     <!-- Potted plant -->
     <g>
@@ -159,6 +172,7 @@ function svgIcon(size: number, { maskable }: { maskable?: boolean } = {}) {
 
     <!-- Eye -->
     <circle cx="${s(0.558)}" cy="${s(0.355)}" r="${s(0.011)}" fill="#5c3a24"/>
+  </g>
   </g>
 </svg>`;
 }
