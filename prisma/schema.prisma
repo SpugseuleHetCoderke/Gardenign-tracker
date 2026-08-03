@@ -1,0 +1,144 @@
+// Gardening tracker schema.
+// Docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// The kinds of things you can do to a plant.
+/// Everything except NOTE can be put on a recurring schedule via CareRule.
+enum ActivityType {
+  WATERING
+  FERTILIZING
+  PRUNING
+  HARVESTING
+  REPOTTING
+  NOTE
+}
+
+/// What kind of thing this is, used to group the encyclopedia.
+enum PlantCategory {
+  VEGETABLE
+  HERB
+  FRUIT
+  FLOWER
+  OTHER
+}
+
+/// Annual / biennial / perennial — decides whether it comes back next year.
+enum Lifecycle {
+  ANNUAL
+  BIENNIAL
+  PERENNIAL
+}
+
+/// Reference data: one row per kind of plant (tomato, basil, ...).
+/// This is both the "how do I look after this thing" knowledge behind the
+/// schedule and the content of the encyclopedia tab, shared by every plant of
+/// that kind.
+model Species {
+  id       String        @id @default(cuid())
+  slug     String        @unique
+  name     String
+  emoji    String
+  category PlantCategory @default(OTHER)
+
+  latinName String?
+  lifecycle Lifecycle?
+
+  sunlight   String
+  soil       String?
+  waterNeeds String?
+  spacing    String?
+  height     String?
+
+  /// Calendar windows as month numbers (1-12). A window may wrap the year,
+  /// e.g. from 11 to 2. Null means "not applicable / unknown".
+  sowIndoorsFromMonth  Int?
+  sowIndoorsToMonth    Int?
+  sowOutdoorsFromMonth Int?
+  sowOutdoorsToMonth   Int?
+  plantOutFromMonth    Int?
+  plantOutToMonth      Int?
+  harvestFromMonth     Int?
+  harvestToMonth       Int?
+
+  generalNotes    String?
+  commonProblems  String?
+  companionPlants String?
+
+  /// True for the five species shipped with the app. Purely informational —
+  /// it marks rows whose text came from the seed file rather than from you.
+  isBuiltIn Boolean @default(false)
+
+  careRules CareRule[]
+  plants    PlantInstance[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// One recurring care task for a species, e.g. "water tomatoes every 2 days".
+/// `instructions` is the *how* that shows up on the dashboard and in the
+/// reminder email, so it should be written for a human, not a database.
+model CareRule {
+  id           String       @id @default(cuid())
+  speciesId    String
+  species      Species      @relation(fields: [speciesId], references: [id], onDelete: Cascade)
+  activityType ActivityType
+  intervalDays Int
+  instructions String
+
+  @@unique([speciesId, activityType])
+}
+
+/// An actual plant being grown, e.g. "the basil on the kitchen windowsill".
+model PlantInstance {
+  id          String    @id @default(cuid())
+  speciesId   String
+  species     Species   @relation(fields: [speciesId], references: [id])
+  nickname    String?
+  location    String?
+  plantedDate DateTime?
+  /// Soft archive: finished/dead plants stay for their history but drop off
+  /// the schedule.
+  active      Boolean   @default(true)
+
+  logs LogEntry[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// Something that was actually done to a plant. The schedule is derived
+/// entirely from these, so there is no separate "due tasks" table to keep
+/// in sync.
+model LogEntry {
+  id              String        @id @default(cuid())
+  plantInstanceId String
+  plantInstance   PlantInstance @relation(fields: [plantInstanceId], references: [id], onDelete: Cascade)
+  activityType    ActivityType
+  notes           String?
+  loggedAt        DateTime      @default(now())
+
+  createdAt DateTime @default(now())
+
+  @@index([plantInstanceId, activityType, loggedAt])
+}
+
+/// One browser's Web Push registration. There's no login system — this is a
+/// household app — so every device that taps "meldingen inschakelen" gets its
+/// own row here, and the reminder job pushes to all of them.
+model PushSubscription {
+  id        String   @id @default(cuid())
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  label     String?
+  createdAt DateTime @default(now())
+}

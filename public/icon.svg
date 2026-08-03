@@ -1,0 +1,11 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <rect width="64" height="64" rx="14.08" fill="#3f7d3a"/>
+  <g transform="translate(7.68, 7.68)">
+    <path d="M 24.32 2.9184
+             C 44.7488 4.864000000000001, 44.7488 30.1568, 24.32 45.721599999999995
+             C 3.8912 30.1568, 3.8912 4.864000000000001, 24.32 2.9184 Z"
+          fill="#f6f7f2"/>
+    <path d="M 24.32 9.728000000000002 L 24.32 41.8304"
+          stroke="#3f7d3a" stroke-width="1.7024000000000001" stroke-linecap="round"/>
+  </g>
+</svg>
