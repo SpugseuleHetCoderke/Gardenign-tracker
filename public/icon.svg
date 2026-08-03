@@ -1,11 +1,133 @@
 <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-  <rect width="64" height="64" rx="14.08" fill="#3f7d3a"/>
-  <g transform="translate(7.68, 7.68)">
-    <path d="M 24.32 2.9184
-             C 44.7488 4.864000000000001, 44.7488 30.1568, 24.32 45.721599999999995
-             C 3.8912 30.1568, 3.8912 4.864000000000001, 24.32 2.9184 Z"
-          fill="#f6f7f2"/>
-    <path d="M 24.32 9.728000000000002 L 24.32 41.8304"
-          stroke="#3f7d3a" stroke-width="1.7024000000000001" stroke-linecap="round"/>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fdf6ec"/>
+      <stop offset="1" stop-color="#f6e6d0"/>
+    </linearGradient>
+    <linearGradient id="soil" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9c6c46"/>
+      <stop offset="1" stop-color="#69452a"/>
+    </linearGradient>
+    <linearGradient id="pot" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f0904f"/>
+      <stop offset="1" stop-color="#b04c1a"/>
+    </linearGradient>
+    <linearGradient id="leaf" x1="0" y1="1" x2="0.5" y2="0">
+      <stop offset="0" stop-color="#2f6b2c"/>
+      <stop offset="1" stop-color="#67b357"/>
+    </linearGradient>
+    <linearGradient id="hair" x1="0.15" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#ffa04a"/>
+      <stop offset="0.4" stop-color="#f0701f"/>
+      <stop offset="1" stop-color="#a83a0c"/>
+    </linearGradient>
+    <linearGradient id="hairShine" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffc182" stop-opacity="0.85"/>
+      <stop offset="1" stop-color="#ffc182" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="skin" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f9d6b1"/>
+      <stop offset="1" stop-color="#e0a476"/>
+    </linearGradient>
+    <linearGradient id="dress" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#93b6ca"/>
+      <stop offset="1" stop-color="#4f7791"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="64" height="64" rx="14.08" fill="url(#bg)"/>
+
+  <g transform="translate(7.04, 7.04)">
+    <!-- Ground -->
+    <path d="M 0 41.43 C 14.98 40.19, 34.94 40.19, 49.92 41.43
+             L 49.92 49.92 L 0 49.92 Z" fill="url(#soil)"/>
+
+    <!-- Potted plant -->
+    <g>
+      <path d="M 11.98 34.94 C 7.49 30.95, 6.49 24.96, 8.49 21.96
+               C 10.98 24.46, 12.48 29.95, 12.48 34.94 Z" fill="url(#leaf)"/>
+      <path d="M 12.98 34.94 C 17.47 30.95, 18.47 24.96, 16.47 21.96
+               C 13.98 24.46, 12.48 29.95, 12.48 34.94 Z" fill="url(#leaf)"/>
+      <path d="M 12.48 34.94 C 9.98 28.95, 10.48 21.96, 12.48 18.47
+               C 14.48 21.96, 14.98 28.95, 12.48 34.94 Z" fill="url(#leaf)"/>
+      <path d="M 12.48 19.97 L 12.48 34.94"
+            stroke="#255c22" stroke-width="0.40" stroke-linecap="round" opacity="0.5"/>
+
+      <path d="M 7.74 34.94 L 17.22 34.94
+               C 16.72 39.44, 15.97 42.18, 14.98 42.43
+               L 9.98 42.43
+               C 8.99 42.18, 8.24 39.44, 7.74 34.94 Z" fill="url(#pot)"/>
+      <rect x="7.24" y="33.70" width="10.48" height="2.25"
+            rx="1.00" fill="#c9581d"/>
+      <path d="M 9.98 35.94 C 9.73 38.94, 9.98 40.93, 10.48 42.18"
+            stroke="#ffb583" stroke-width="0.60" stroke-linecap="round" opacity="0.5" fill="none"/>
+    </g>
+
+    <!-- Long hair, drawn behind the body -->
+    <path d="M 29.95 11.23
+             C 36.69 11.23, 40.19 15.72, 39.94 20.97
+             C 41.68 25.96, 43.83 31.45, 43.33 36.44
+             C 42.83 39.94, 41.53 42.33, 39.94 43.03
+             C 39.34 37.94, 37.79 32.70, 36.24 28.70
+             C 34.94 24.96, 33.55 21.47, 32.70 19.72
+             C 29.95 17.22, 27.36 15.23, 27.11 14.23
+             C 27.61 12.63, 28.65 11.23, 29.95 11.23 Z"
+          fill="url(#hair)"/>
+
+    <!-- Neck, tucked behind the dress -->
+    <path d="M 28.85 20.72 L 31.70 20.72
+             L 32.20 24.96 L 28.70 24.96 Z" fill="#dfa273"/>
+
+    <!-- Dress -->
+    <path d="M 29.95 22.46
+             C 33.95 22.46, 35.94 24.96, 36.69 28.95
+             C 37.69 33.95, 38.69 38.94, 38.94 41.93
+             L 24.96 41.93
+             C 25.21 36.94, 26.46 29.95, 28.20 24.96
+             C 28.70 23.46, 29.20 22.46, 29.95 22.46 Z"
+          fill="url(#dress)"/>
+
+    <!-- Arm reaching toward the plant -->
+    <path d="M 29.95 24.96
+             C 26.96 27.46, 23.46 30.45, 19.97 32.70"
+          stroke="url(#skin)" stroke-width="2.75" stroke-linecap="round" fill="none"/>
+    <circle cx="19.22" cy="33.20" r="1.65" fill="url(#skin)"/>
+
+    <!-- Head: profile facing the plant -->
+    <path d="M 29.95 12.23
+             C 27.21 12.48, 25.71 14.98, 25.86 17.22
+             C 24.96 18.22, 24.81 18.87, 25.36 19.12
+             C 25.76 19.32, 25.76 19.97, 26.06 20.37
+             C 26.36 21.37, 27.21 22.31, 28.70 22.46
+             C 31.70 22.71, 33.95 21.22, 34.44 18.72
+             C 34.94 15.48, 33.20 12.48, 29.95 12.23 Z"
+          fill="url(#skin)"/>
+
+    <!-- Fringe sweeping over the forehead -->
+    <path d="M 29.95 11.73
+             C 32.95 11.88, 34.94 14.23, 34.69 17.22
+             C 32.95 15.72, 29.95 14.98, 27.21 15.72
+             C 26.56 14.98, 26.46 13.73, 27.21 12.88
+             C 27.96 12.08, 28.95 11.73, 29.95 11.73 Z"
+          fill="url(#hair)"/>
+
+    <!-- A strand falling forward over the shoulder -->
+    <path d="M 33.10 19.97
+             C 34.94 22.96, 35.69 27.46, 35.54 31.45
+             C 35.44 33.95, 34.94 35.44, 34.34 36.09
+             C 34.10 32.45, 33.45 27.96, 32.45 24.46
+             C 31.95 22.46, 32.20 20.97, 33.10 19.97 Z"
+          fill="url(#hair)"/>
+
+    <!-- Hair highlight -->
+    <path d="M 32.95 13.23
+             C 36.19 15.23, 37.69 20.97, 39.04 26.21
+             C 40.34 31.45, 41.33 36.44, 41.03 40.44
+             C 39.69 36.19, 38.04 29.95, 36.54 24.71
+             C 35.24 19.72, 33.85 15.23, 32.95 13.23 Z"
+          fill="url(#hairShine)"/>
+
+    <!-- Eye -->
+    <circle cx="27.86" cy="17.72" r="0.55" fill="#5c3a24"/>
   </g>
 </svg>
