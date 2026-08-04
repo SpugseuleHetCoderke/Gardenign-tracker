@@ -112,6 +112,7 @@ error page. Follow that pattern for anything user-facing.
 | `/soorten/[slug]` | Species detail: calendar, care, problems, companions |
 | `/soorten/[slug]/bewerken` | Edit a species |
 | `/instellingen` | Email reminder on/off + recipient address |
+| `/handleiding` | Visual how-to-use guide, built from mockups of the other screens — linked from Instellingen. Static content, no DB reads. |
 
 Every page that reads the schedule sets `export const dynamic = "force-dynamic"`
 — the output depends on today's date and must never be cached at build time.
