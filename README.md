@@ -5,10 +5,10 @@ tells you what needs doing today and how to do it. Built for a household of
 two, in Dutch.
 
 The core idea: you shouldn't have to type in horticultural knowledge. The app
-ships with a **catalogue of 96 common Belgian garden plants** — search what you
-bought, tap it, and everything (sun, water, soil, sowing/harvest calendar, care
-intervals with instructions, common problems, companion planting) is filled in
-for you. From there the schedule builds itself.
+ships with a **catalogue of 144 common Belgian garden plants** — search what
+you bought, tap it, and everything (sun, water, soil, sowing/harvest calendar,
+care intervals with instructions, common problems, companion planting) is
+filled in for you. From there the schedule builds itself.
 
 See [ROADMAP.md](./ROADMAP.md) for what's built and what could come next.
 
@@ -79,7 +79,7 @@ This is built for [Vercel](https://vercel.com) (zero-config for Next.js) plus
   "due date" is ever stored — it's always recomputed, so editing a care
   interval updates every reminder instantly.
 - `src/lib/email.ts` / `push.ts` — the two reminder channels.
-- `src/lib/catalog.ts` — **the plant catalogue**: 96 species with all their
+- `src/lib/catalog.ts` — **the plant catalogue**: 144 species with all their
   horticultural data. This is the single source of truth for plant info; the
   seed script and the "add from catalogue" action both read from it. Adding a
   plant is one object in the `CATALOG` array — no migration needed.

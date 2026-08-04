@@ -50,12 +50,12 @@ nothing to keep in sync. **Do not add a stored due date.**
 
 ### The plant catalogue is the source of truth for plant data
 
-`src/lib/catalog.ts` contains 96 plants (vegetables, herbs, fruit, flowers)
+`src/lib/catalog.ts` contains 144 plants (vegetables, herbs, fruit, flowers)
 with full horticultural data for a Belgian climate. It is a **read-only
 library, not database rows.**
 
 - Picking an entry in the UI *copies* it into the `Species` table, so the
-  user's Naslag means "the plants we actually grow" — not 96 things they don't.
+  user's Naslag means "the plants we actually grow" — not 144 things they don't.
 - Because it's a copy, editing a species afterwards never touches the
   catalogue.
 - `prisma/seed.ts` installs the five starter species by reading from the

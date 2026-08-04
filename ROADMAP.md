@@ -13,7 +13,7 @@ Ordered by what actually matters for daily use:
 
 ## What's built (v1)
 
-- **Plantenlijst (96 species)** — a built-in catalogue of common Belgian
+- **Plantenlijst (144 species)** — a built-in catalogue of common Belgian
   garden vegetables, herbs, fruit and flowers. Search what you bought, tap it,
   and it lands in your Naslag fully filled in: sun, water, soil, spacing,
   sowing/planting/harvest calendar, care intervals with written instructions,
@@ -35,14 +35,14 @@ Ordered by what actually matters for daily use:
   Instellingen — both driven by one `/api/cron/reminders` endpoint.
 - Installable as a PWA with icons and manifest. Dutch UI throughout.
 - Starts with 5 species installed (sunflower, tomato, chives, parsley, basil);
-  the other 91 are one tap away.
+  the other 139 are one tap away.
 
 ## Near-term, low-effort
 
-- **Grow the catalogue.** 96 species covers most of a Belgian kitchen garden,
-  but there are obvious gaps: more fruit trees and soft fruit, ornamental
-  shrubs, houseplants, and less common vegetables. Adding an entry is one
-  object in `src/lib/catalog.ts` — no migration, no UI work.
+- **Grow the catalogue.** 144 species covers most of a Belgian kitchen garden
+  and flower bed, but there are still gaps: more fruit trees and soft fruit,
+  houseplants, and less common vegetables. Adding an entry is one object in
+  `src/lib/catalog.ts` — no migration, no UI work.
 - **Add a plant straight from the catalogue.** Right now picking a species
   adds it to Naslag, then you add the actual plant in a second step. A
   "voeg ook toe aan mijn tuin" checkbox in the picker would collapse that
