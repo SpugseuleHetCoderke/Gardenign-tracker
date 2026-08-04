@@ -3,26 +3,55 @@
 What exists today, and ideas for what could come next. Nothing here is
 committed to — it's a punch list to pick from, not a promise.
 
+## Priorities
+
+Ordered by what actually matters for daily use:
+
+1. **Plant information** — knowing what each plant needs, without typing it in
+2. **Schedule + reminders** — what to do, when, for what's actually planted
+3. Note-taking and history — useful, but the least important of the three
+
 ## What's built (v1)
 
-- **Vandaag**: overdue / due today / coming up, grouped by task, with
-  one-tap "Klaar" and a "Hoe?" toggle showing the care instructions.
+- **Plantenlijst (96 species)** — a built-in catalogue of common Belgian
+  garden vegetables, herbs, fruit and flowers. Search what you bought, tap it,
+  and it lands in your Naslag fully filled in: sun, water, soil, spacing,
+  sowing/planting/harvest calendar, care intervals with written instructions,
+  common problems, and companion planting. No manual entry, no API key, works
+  offline. Source of truth is `src/lib/catalog.ts`.
+- **Naslag**: your plant encyclopedia — the species you actually grow, grouped
+  by category, with "nu zaaien" / "nu oogsten" badges for the current month.
+  Everything stays editable after adding, and you can still hand-write a
+  species the catalogue doesn't cover.
+- **Vandaag**: overdue / due today / coming up, with one-tap "Klaar", a "Hoe?"
+  toggle showing the care instructions, and "alles in één keer" shortcuts when
+  several plants need the same thing.
 - **Noteren**: log one activity (water, feed, prune, harvest, repot) across
   several plants at once, pre-selecting whichever plants are actually due.
-- **Mijn planten**: the plants you're actually growing, each with its own
-  history and schedule; archiving keeps history without cluttering Vandaag.
-- **Naslag**: an encyclopedia of plant *types* — sun, water, soil, spacing,
-  sowing/planting/harvest calendar, common problems, companion planting —
-  separate from the *individual plants* in your garden. Adding a new species
-  here immediately makes it available everywhere else in the app.
-- **Reminders**: push notifications (Android, and iPhone if added to the
-  home screen) plus an optional daily email, both driven by one shared
-  `/api/cron/reminders` endpoint.
-- Seeded with 5 starter species — sunflower, tomato, chives, parsley, basil —
-  written for a Belgian climate and garden. All text is editable from the
-  app itself (Naslag → soort bewerken).
+- **Mijn planten**: the plants you're growing, each with its own history and
+  schedule; archiving keeps history without cluttering Vandaag.
+- **Reminders**: push notifications (Android, and iPhone if added to the home
+  screen) plus an optional daily email whose recipient is set in-app under
+  Instellingen — both driven by one `/api/cron/reminders` endpoint.
+- Installable as a PWA with icons and manifest. Dutch UI throughout.
+- Starts with 5 species installed (sunflower, tomato, chives, parsley, basil);
+  the other 91 are one tap away.
 
 ## Near-term, low-effort
+
+- **Grow the catalogue.** 96 species covers most of a Belgian kitchen garden,
+  but there are obvious gaps: more fruit trees and soft fruit, ornamental
+  shrubs, houseplants, and less common vegetables. Adding an entry is one
+  object in `src/lib/catalog.ts` — no migration, no UI work.
+- **Add a plant straight from the catalogue.** Right now picking a species
+  adds it to Naslag, then you add the actual plant in a second step. A
+  "voeg ook toe aan mijn tuin" checkbox in the picker would collapse that
+  into one action.
+- **Fill gaps with an AI lookup (optional).** For a plant not in the
+  catalogue, the app could call Claude to draft the entry and show it for
+  review before saving. Needs an Anthropic API key and costs a cent or two
+  per plant — worth revisiting only if the catalogue turns out to be missing
+  things you actually buy.
 
 - **Photos on log entries.** "This is what the tomato looked like on the day
   it got blight" is exactly the kind of thing worth keeping. Needs image

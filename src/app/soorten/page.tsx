@@ -29,7 +29,7 @@ export default async function SpeciesIndexPage() {
           </p>
         </div>
         <Link
-          href="/soorten/nieuw"
+          href="/soorten/toevoegen"
           className="min-h-11 shrink-0 rounded-lg bg-accent px-4 py-3 text-sm font-semibold text-white"
         >
           Toevoegen
@@ -37,9 +37,17 @@ export default async function SpeciesIndexPage() {
       </header>
 
       {species.length === 0 && (
-        <p className="rounded-xl border border-border-soft bg-surface p-6 text-center text-muted">
-          Nog geen soorten. Voeg er één toe.
-        </p>
+        <div className="rounded-xl border border-border-soft bg-surface p-6 text-center">
+          <p className="mb-4 text-muted">
+            Nog geen soorten in je naslag.
+          </p>
+          <Link
+            href="/soorten/toevoegen"
+            className="inline-block min-h-11 rounded-lg bg-accent px-4 py-3 font-semibold text-white"
+          >
+            Kies uit de plantenlijst
+          </Link>
+        </div>
       )}
 
       {CATEGORY_ORDER.filter((c) => byCategory.has(c)).map((category) => (

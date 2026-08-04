@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { updateEmailSettings } from "@/lib/settings";
+import { CATALOG_BY_SLUG, toSpeciesInput } from "@/lib/catalog";
 import {
   ActivityType,
   Lifecycle,
@@ -345,6 +346,49 @@ function readSpeciesFields(formData: FormData) {
     commonProblems: text(formData, "commonProblems"),
     companionPlants: text(formData, "companionPlants"),
   };
+}
+
+/**
+ * Copies one or more catalogue entries into the Species table. Everything is
+ * filled in from the catalogue, so there's no form to complete — and because
+ * it's a copy, editing the species afterwards never touches the catalogue.
+ *
+ * Slugs already present are skipped rather than duplicated, so re-submitting
+ * is harmless.
+ */
+export async function addSpeciesFromCatalog(formData: FormData) {
+  const slugs = formData.getAll("slugs").map(String).filter(Boolean);
+  if (slugs.length === 0) return { added: 0, skipped: 0 };
+
+  const entries = slugs
+    .map((slug) => CATALOG_BY_SLUG.get(slug))
+    .filter((e): e is NonNullable<typeof e> => Boolean(e));
+
+  const existing = await prisma.species.findMany({
+    where: { slug: { in: entries.map((e) => e.slug) } },
+    select: { slug: true },
+  });
+  const alreadyThere = new Set(existing.map((s) => s.slug));
+
+  const toAdd = entries.filter((e) => !alreadyThere.has(e.slug));
+
+  for (const entry of toAdd) {
+    const { fields, careRules } = toSpeciesInput(entry);
+    await prisma.species.create({
+      data: {
+        slug: entry.slug,
+        ...fields,
+        isBuiltIn: true,
+        careRules: { create: careRules },
+      },
+    });
+  }
+
+  revalidatePath("/");
+  revalidatePath("/soorten");
+  revalidatePath("/planten/nieuw");
+
+  return { added: toAdd.length, skipped: entries.length - toAdd.length };
 }
 
 export async function createSpecies(formData: FormData) {
